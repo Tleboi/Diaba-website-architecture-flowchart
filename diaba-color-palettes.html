@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diaba, Diaba & Co — Colour Direction</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f4f0eb;
+    font-family: 'Outfit', sans-serif;
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+
+  .page { max-width: 1200px; margin: 0 auto; padding: 64px 32px 100px; }
+
+  header { margin-bottom: 64px; }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: #888; margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 600; line-height: 1.1;
+    color: #111;
+  }
+  h1 em { font-style: italic; color: #5a6a7a; }
+  .intro {
+    font-size: 14px; color: #666; line-height: 1.7;
+    max-width: 580px; margin-top: 16px;
+  }
+
+  /* ── PALETTE CARD ── */
+  .palette-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 48px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s;
+  }
+  .palette-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+
+  /* recommended badge */
+  .palette-card.recommended { box-shadow: 0 4px 32px rgba(0,0,0,0.14); }
+  .recommended-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #1a3a2a; color: #6fcf97;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+  .recommended-tag::before { content: '★'; font-size: 10px; }
+
+  /* swatch strip */
+  .swatches {
+    display: flex; height: 100px;
+  }
+  .swatch {
+    flex: 1;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 10px 12px;
+    position: relative; transition: flex 0.3s ease;
+    cursor: default;
+  }
+  .swatch:hover { flex: 1.6; }
+  .swatch-hex {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+  .swatch-name {
+    font-size: 10px; font-weight: 500; margin-bottom: 2px;
+    opacity: 0.85;
+  }
+
+  /* card body */
+  .card-body { padding: 28px 32px 32px; }
+  .card-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 20px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .palette-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600; color: #111;
+  }
+  .palette-vibe {
+    font-size: 12px; color: #888; font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* usage grid */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px; margin-top: 20px;
+  }
+  .usage-item {
+    border-radius: 6px; overflow: hidden;
+    border: 1px solid #eee;
+  }
+  .usage-color { height: 32px; }
+  .usage-label {
+    padding: 8px 10px;
+    background: #fafafa;
+    font-size: 10px; line-height: 1.4;
+    color: #555;
+  }
+  .usage-label strong {
+    display: block; font-size: 11px; color: #222;
+    margin-bottom: 1px; font-weight: 600;
+  }
+
+  /* mini mockup */
+  .mockup {
+    margin-top: 24px;
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid #eee;
+  }
+  .mockup-nav {
+    display: flex; align-items: center;
+    padding: 0 20px; height: 44px;
+    gap: 24px;
+  }
+  .mockup-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700; font-size: 14px; letter-spacing: 0.03em;
+  }
+  .mockup-links {
+    display: flex; gap: 18px; margin-left: auto;
+  }
+  .mockup-link { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+  .mockup-hero {
+    padding: 32px 24px 28px;
+  }
+  .mockup-tag {
+    font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+    font-family: 'DM Mono', monospace; margin-bottom: 10px; opacity: 0.7;
+  }
+  .mockup-h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600; line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .mockup-body {
+    font-size: 10px; line-height: 1.6; max-width: 340px; opacity: 0.8;
+    margin-bottom: 16px;
+  }
+  .mockup-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mockup-btn {
+    padding: 8px 18px; border-radius: 3px;
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-family: 'DM Mono', monospace; cursor: default;
+    font-weight: 500;
+  }
+
+  hr { border: none; border-top: 1px solid #e0dbd4; margin: 16px 0 40px; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600; color: #444;
+    margin-bottom: 24px; margin-top: 8px;
+  }
+
+  .tip-box {
+    background: #1c2b3a; color: #a8c0d0;
+    border-radius: 8px; padding: 20px 24px;
+    font-size: 12px; line-height: 1.7;
+    margin-top: 48px;
+  }
+  .tip-box strong { color: #e8c97a; display: block; margin-bottom: 6px; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Colour Direction Study</div>
+    <h1>Diaba, Diaba &amp; Co<br><em>— Three Palette Proposals</em></h1>
+    <p class="intro">Each palette is designed to reflect the firm's identity: authoritative, maritime-aware, internationally positioned, and Ghana-rooted. Includes a mini mockup to show how each feels in context.</p>
+  </header>
+
+  <!-- ══════════════════════════════ PALETTE 1 ══ -->
+  <div class="palette-card recommended">
+    <div class="swatches">
+      <div class="swatch" style="background:#0D1F2D; color:#fff;">
+        <div class="swatch-name">Deep Admiralty</div>
+        <div class="swatch-hex">#0D1F2D</div>
+      </div>
+      <div class="swatch" style="background:#1A3A4A; color:#fff;">
+        <div class="swatch-name">Ocean Depth</div>
+        <div class="swatch-hex">#1A3A4A</div>
+      </div>
+      <div class="swatch" style="background:#C9A84C; color:#0D1F2D;">
+        <div class="swatch-name">Lex Gold</div>
+        <div class="swatch-hex">#C9A84C</div>
+      </div>
+      <div class="swatch" style="background:#E8C97A; color:#0D1F2D;">
+        <div class="swatch-name">Pale Gold</div>
+        <div class="swatch-hex">#E8C97A</div>
+      </div>
+      <div class="swatch" style="background:#F5F0E8; color:#0D1F2D;">
+        <div class="swatch-name">Parchment</div>
+        <div class="swatch-hex">#F5F0E8</div>
+      </div>
+      <div class="swatch" style="background:#4A7A9B; color:#fff;">
+        <div class="swatch-name">Horizon Blue</div>
+        <div class="swatch-hex">#4A7A9B</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-header">
+        <div>
+          <div class="palette-name">Navy &amp; Gold — "Maritime Authority"</div>
+          <div class="palette-vibe">Classic, powerful, prestigious — the natural choice for a maritime law firm</div>
+        </div>
+        <div class="recommended-tag">Recommended</div>
+      </div>
+
+      <div class="usage-grid">
+        <div class="usage-item">
+          <div class="usage-color" style="background:#0D1F2D;"></div>
+          <div class="usage-label"><strong>Primary Background</strong>Headers, footer, dark sections</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#C9A84C;"></div>
+          <div class="usage-label"><strong>Primary Accent</strong>CTAs, headings, borders, highlights</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#F5F0E8;"></div>
+          <div class="usage-label"><strong>Light Background</strong>Page body, cards, white sections</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#4A7A9B;"></div>
+          <div class="usage-label"><strong>Maritime Accent</strong>Maritime Division badge, links, icons</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#1A3A4A;"></div>
+          <div class="usage-label"><strong>Midtone</strong>Cards, hover states, section dividers</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#E8C97A;"></div>
+          <div class="usage-label"><strong>Subtle Gold</strong>Subheadings, decorative elements</div>
+        </div>
+      </div>
+
+      <!-- mini mockup -->
+      <div class="mockup">
+        <div class="mockup-nav" style="background:#0D1F2D;">
+          <div class="mockup-logo" style="color:#C9A84C;">Diaba, Diaba &amp; Co</div>
+          <div class="mockup-links">
+            <div class="mockup-link" style="color:#F5F0E8;">About</div>
+            <div class="mockup-link" style="color:#F5F0E8;">Practice</div>
+            <div class="mockup-link" style="color:#C9A84C; font-weight:600;">Maritime</div>
+            <div class="mockup-link" style="color:#F5F0E8;">Contact</div>
+          </div>
+        </div>
+        <div class="mockup-hero" style="background:#1A3A4A;">
+          <div class="mockup-tag" style="color:#C9A84C;">Commercial · Regulatory · Maritime</div>
+          <div class="mockup-h1" style="color:#F5F0E8;">Strategic Legal Counsel<br>for Maritime &amp; Commerce</div>
+          <div class="mockup-body" style="color:#a8c0d0;">Diaba, Diaba &amp; Co delivers authoritative legal support across Ghana's commercial, regulatory, and maritime sectors.</div>
+          <div class="mockup-btns">
+            <div class="mockup-btn" style="background:#C9A84C; color:#0D1F2D;">Our Services</div>
+            <div class="mockup-btn" style="border:1px solid #4A7A9B; color:#a8c0d0;">Maritime Division</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ PALETTE 2 ══ -->
+  <div class="palette-card">
+    <div class="swatches">
+      <div class="swatch" style="background:#1C1C1C; color:#fff;">
+        <div class="swatch-name">Charcoal</div>
+        <div class="swatch-hex">#1C1C1C</div>
+      </div>
+      <div class="swatch" style="background:#2F2F2F; color:#fff;">
+        <div class="swatch-name">Graphite</div>
+        <div class="swatch-hex">#2F2F2F</div>
+      </div>
+      <div class="swatch" style="background:#B8955A; color:#fff;">
+        <div class="swatch-name">Bronze</div>
+        <div class="swatch-hex">#B8955A</div>
+      </div>
+      <div class="swatch" style="background:#D4AF7A; color:#1C1C1C;">
+        <div class="swatch-name">Warm Sand</div>
+        <div class="swatch-hex">#D4AF7A</div>
+      </div>
+      <div class="swatch" style="background:#FAFAFA; color:#1C1C1C;">
+        <div class="swatch-name">Off-White</div>
+        <div class="swatch-hex">#FAFAFA</div>
+      </div>
+      <div class="swatch" style="background:#3D6A5F; color:#fff;">
+        <div class="swatch-name">Harbour Green</div>
+        <div class="swatch-hex">#3D6A5F</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-header">
+        <div>
+          <div class="palette-name">Charcoal &amp; Bronze — "Continental Edge"</div>
+          <div class="palette-vibe">Refined, editorial, modern — works beautifully for international and commercial positioning</div>
+        </div>
+      </div>
+
+      <div class="usage-grid">
+        <div class="usage-item">
+          <div class="usage-color" style="background:#1C1C1C;"></div>
+          <div class="usage-label"><strong>Primary Background</strong>Nav, footer, dark panels</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#B8955A;"></div>
+          <div class="usage-label"><strong>Primary Accent</strong>CTAs, highlights, dividers</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#FAFAFA;"></div>
+          <div class="usage-label"><strong>Light Background</strong>Main content, cards</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#3D6A5F;"></div>
+          <div class="usage-label"><strong>Second Accent</strong>Maritime section, success states</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#D4AF7A;"></div>
+          <div class="usage-label"><strong>Warm Tone</strong>Subtle accents, hover</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#2F2F2F;"></div>
+          <div class="usage-label"><strong>Midtone</strong>Cards, borders, sections</div>
+        </div>
+      </div>
+
+      <div class="mockup">
+        <div class="mockup-nav" style="background:#1C1C1C;">
+          <div class="mockup-logo" style="color:#D4AF7A;">Diaba, Diaba &amp; Co</div>
+          <div class="mockup-links">
+            <div class="mockup-link" style="color:#ccc;">About</div>
+            <div class="mockup-link" style="color:#ccc;">Practice</div>
+            <div class="mockup-link" style="color:#B8955A; font-weight:600;">Maritime</div>
+            <div class="mockup-link" style="color:#ccc;">Contact</div>
+          </div>
+        </div>
+        <div class="mockup-hero" style="background:#FAFAFA;">
+          <div class="mockup-tag" style="color:#B8955A;">Commercial · Regulatory · Maritime</div>
+          <div class="mockup-h1" style="color:#1C1C1C;">Strategic Legal Counsel<br>for Maritime &amp; Commerce</div>
+          <div class="mockup-body" style="color:#666;">Diaba, Diaba &amp; Co delivers authoritative legal support across Ghana's commercial, regulatory, and maritime sectors.</div>
+          <div class="mockup-btns">
+            <div class="mockup-btn" style="background:#1C1C1C; color:#D4AF7A;">Our Services</div>
+            <div class="mockup-btn" style="border:1px solid #3D6A5F; color:#3D6A5F;">Maritime Division</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ PALETTE 3 ══ -->
+  <div class="palette-card">
+    <div class="swatches">
+      <div class="swatch" style="background:#FFFFFF; color:#1a1a1a; border-right:1px solid #eee;">
+        <div class="swatch-name" style="color:#333;">White</div>
+        <div class="swatch-hex" style="color:#666;">#FFFFFF</div>
+      </div>
+      <div class="swatch" style="background:#F7F4EF; color:#1a1a1a;">
+        <div class="swatch-name" style="color:#333;">Ivory</div>
+        <div class="swatch-hex" style="color:#666;">#F7F4EF</div>
+      </div>
+      <div class="swatch" style="background:#1B3A5C; color:#fff;">
+        <div class="swatch-name">Deep Blue</div>
+        <div class="swatch-hex">#1B3A5C</div>
+      </div>
+      <div class="swatch" style="background:#A0794A; color:#fff;">
+        <div class="swatch-name">Copper</div>
+        <div class="swatch-hex">#A0794A</div>
+      </div>
+      <div class="swatch" style="background:#2D6A8F; color:#fff;">
+        <div class="swatch-name">Cerulean</div>
+        <div class="swatch-hex">#2D6A8F</div>
+      </div>
+      <div class="swatch" style="background:#4A4A4A; color:#fff;">
+        <div class="swatch-name">Ink</div>
+        <div class="swatch-hex">#4A4A4A</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-header">
+        <div>
+          <div class="palette-name">Ivory &amp; Deep Blue — "Ghana Light"</div>
+          <div class="palette-vibe">Clean, professional, approachable — light-mode focused, ideal for maximum readability</div>
+        </div>
+      </div>
+
+      <div class="usage-grid">
+        <div class="usage-item">
+          <div class="usage-color" style="background:#F7F4EF;"></div>
+          <div class="usage-label"><strong>Primary Background</strong>Main pages, warm white base</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#1B3A5C;"></div>
+          <div class="usage-label"><strong>Primary Dark</strong>Headings, nav, footer text</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#A0794A;"></div>
+          <div class="usage-label"><strong>Copper Accent</strong>CTAs, highlights, links</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#2D6A8F;"></div>
+          <div class="usage-label"><strong>Maritime Blue</strong>Maritime section, icons</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#FFFFFF; border:1px solid #eee;"></div>
+          <div class="usage-label"><strong>Card White</strong>Component backgrounds</div>
+        </div>
+        <div class="usage-item">
+          <div class="usage-color" style="background:#4A4A4A;"></div>
+          <div class="usage-label"><strong>Body Text</strong>Paragraphs, metadata</div>
+        </div>
+      </div>
+
+      <div class="mockup">
+        <div class="mockup-nav" style="background:#1B3A5C;">
+          <div class="mockup-logo" style="color:#fff; font-weight:700;">Diaba, Diaba &amp; Co</div>
+          <div class="mockup-links">
+            <div class="mockup-link" style="color:rgba(255,255,255,0.7);">About</div>
+            <div class="mockup-link" style="color:rgba(255,255,255,0.7);">Practice</div>
+            <div class="mockup-link" style="color:#A0794A; font-weight:600;">Maritime</div>
+            <div class="mockup-link" style="color:rgba(255,255,255,0.7);">Contact</div>
+          </div>
+        </div>
+        <div class="mockup-hero" style="background:#F7F4EF;">
+          <div class="mockup-tag" style="color:#A0794A;">Commercial · Regulatory · Maritime</div>
+          <div class="mockup-h1" style="color:#1B3A5C;">Strategic Legal Counsel<br>for Maritime &amp; Commerce</div>
+          <div class="mockup-body" style="color:#4A4A4A;">Diaba, Diaba &amp; Co delivers authoritative legal support across Ghana's commercial, regulatory, and maritime sectors.</div>
+          <div class="mockup-btns">
+            <div class="mockup-btn" style="background:#A0794A; color:#fff;">Our Services</div>
+            <div class="mockup-btn" style="border:1px solid #2D6A8F; color:#2D6A8F;">Maritime Division</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Recommendation tip -->
+  <div class="tip-box">
+    <strong>💡 Recommendation: Go with Palette 1 — Navy &amp; Gold</strong>
+    Palette 1 is the strongest match for Diaba, Diaba &amp; Co because: (1) Navy communicates maritime authority and legal gravitas — it's the global language of admiralty law. (2) Gold signals prestige and professionalism without being flashy. (3) Horizon Blue gives the Maritime Division its own identity within the site. (4) Parchment keeps readability high on light sections. Palettes 2 and 3 are excellent alternatives — Palette 2 if you want a more modern/editorial feel, and Palette 3 if you prefer a light-mode-first approach.
+  </div>
+
+</div>
+</body>
+</html>
