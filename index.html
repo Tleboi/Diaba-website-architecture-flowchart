@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diaba, Diaba & Co — Website Architecture Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --deep: #112233;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.15);
+    --cream: #f5f0e8;
+    --muted: #7a8a99;
+    --line: rgba(201,168,76,0.35);
+    --white: #ffffff;
+    --node-bg: #162030;
+    --node-border: rgba(201,168,76,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    color: var(--cream);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.5;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    padding: 60px 40px 100px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    margin-bottom: 80px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 40px;
+  }
+  header .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--cream);
+  }
+  header h1 span { color: var(--gold); font-style: italic; }
+  header .sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
+  }
+
+  /* ── Flow Canvas ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── ROOT NODE ── */
+  .root-node {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 18px 48px;
+    border-radius: 4px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(201,168,76,0.25);
+    position: relative;
+  }
+
+  /* ── CONNECTOR ── */
+  .connector-v {
+    width: 2px; background: var(--line); flex-shrink: 0;
+  }
+  .connector-v.tall { height: 40px; }
+  .connector-v.short { height: 24px; }
+
+  /* ── NAV ROW (main pages) ── */
+  .nav-row {
+    display: flex;
+    gap: 0;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    justify-content: center;
+  }
+  /* horizontal bar connecting nav nodes */
+  .h-bar {
+    position: absolute;
+    top: 0; height: 2px;
+    background: var(--line);
+    left: 0; right: 0;
+    margin: 0 auto;
+  }
+
+  .nav-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 150px;
+    max-width: 200px;
+  }
+
+  .nav-tick {
+    width: 2px; height: 32px;
+    background: var(--line);
+  }
+
+  /* ── PAGE NODE ── */
+  .page-node {
+    width: 100%;
+    max-width: 180px;
+    padding: 12px 16px;
+    border: 1px solid var(--node-border);
+    background: var(--node-bg);
+    border-radius: 4px;
+    text-align: center;
+    cursor: default;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .page-node:hover {
+    border-color: var(--gold);
+    background: #1c2d40;
+    box-shadow: 0 0 20px rgba(201,168,76,0.12);
+  }
+  .page-node .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cream);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .page-node .tag {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Colors per section */
+  .page-node.home    { border-color: rgba(201,168,76,0.6); }
+  .page-node.about   { border-color: rgba(100,180,200,0.5); }
+  .page-node.about .label { color: #a8dce8; }
+  .page-node.practice { border-color: rgba(120,200,140,0.5); }
+  .page-node.practice .label { color: #a8e0b4; }
+  .page-node.maritime { border-color: rgba(90,150,220,0.6); }
+  .page-node.maritime .label { color: #9bbfe0; }
+  .page-node.intl    { border-color: rgba(200,140,90,0.5); }
+  .page-node.intl .label { color: #e0c09b; }
+  .page-node.insights { border-color: rgba(170,120,200,0.5); }
+  .page-node.insights .label { color: #c9a8e0; }
+  .page-node.contact  { border-color: rgba(200,100,100,0.5); }
+  .page-node.contact .label { color: #e0a8a8; }
+
+  /* ── SECTION CHILDREN ── */
+  .children-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0;
+  }
+
+  .section-group {
+    width: 100%;
+    max-width: 180px;
+  }
+
+  .child-node {
+    width: 100%;
+    padding: 7px 10px;
+    border-left: 2px solid var(--line);
+    background: rgba(255,255,255,0.025);
+    margin-top: 4px;
+    border-radius: 0 3px 3px 0;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    line-height: 1.5;
+    transition: background 0.2s;
+  }
+  .child-node:hover {
+    background: rgba(201,168,76,0.06);
+    color: var(--cream);
+  }
+  .child-node strong {
+    display: block;
+    font-size: 9.5px;
+    color: #c0cdd8;
+    font-weight: 500;
+    margin-bottom: 1px;
+  }
+
+  /* sub-child */
+  .sub-children {
+    padding-left: 10px;
+    border-left: 2px solid rgba(201,168,76,0.15);
+    margin-top: 2px;
+  }
+  .sub-child {
+    font-size: 8px;
+    color: #56687a;
+    padding: 2px 0 2px 6px;
+    letter-spacing: 0.04em;
+    border-left: 1px solid rgba(201,168,76,0.1);
+    margin-top: 1px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    margin-top: 80px;
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  footer span { color: var(--gold); }
+
+  /* ── Tooltip helper ── */
+  .badge {
+    display: inline-block;
+    background: var(--gold-dim);
+    color: var(--gold-light);
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-top: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .nav-row { flex-wrap: wrap; gap: 20px; }
+    .nav-col { min-width: 140px; }
+    .h-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Website Architecture Flowchart</div>
+    <h1>Diaba, Diaba &amp; Co <span>— Site Map</span></h1>
+    <div class="sub">Full Navigation Structure &amp; Page Hierarchy</div>
+  </header>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#c9a84c;"></div> Home
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#a8dce8;"></div> About the Firm
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#a8e0b4;"></div> Practice Areas
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#9bbfe0;"></div> Maritime Division
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#e0c09b;"></div> International Practice
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#c9a8e0;"></div> Insights
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#e0a8a8;"></div> Contact
+    </div>
+  </div>
+
+  <div class="flow">
+
+    <!-- ROOT -->
+    <div class="root-node">
+      diababiaco.com
+      <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:400;margin-top:4px;opacity:0.7;letter-spacing:0.12em;">WEBSITE ROOT</div>
+    </div>
+
+    <!-- vertical drop -->
+    <div class="connector-v tall"></div>
+
+    <!-- NAV ROW wrapper -->
+    <div style="width:100%; position:relative;">
+
+      <!-- horizontal bar -->
+      <div style="height:2px; background: var(--line); width:85%; margin:0 auto; position:relative;"></div>
+
+      <!-- 7 columns -->
+      <div class="nav-row" style="margin-top:0;">
+
+        <!-- HOME -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node home">
+            <span class="label">Home</span>
+            <span class="tag">Landing Page</span>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Hero / Banner</strong>Tagline · CTAs</div>
+              <div class="child-node"><strong>Firm Snapshot</strong>Intro · Mission</div>
+              <div class="child-node"><strong>Practice Areas</strong>6-area grid</div>
+              <div class="child-node"><strong>Why Choose Us</strong>Differentiators</div>
+              <div class="child-node"><strong>Geographic Coverage</strong>Tema &amp; Takoradi map</div>
+              <div class="child-node"><strong>CTA Section</strong>Contact prompt</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABOUT -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node about">
+            <span class="label">About</span>
+            <span class="tag">Firm Profile</span>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Firm Overview</strong>History · Vision · Mission</div>
+              <div class="child-node"><strong>Leadership</strong>Managing Partner bio</div>
+              <div class="child-node"><strong>Our Team</strong>Associates &amp; consultants</div>
+              <div class="child-node"><strong>Firm Structure</strong>Practice divisions</div>
+              <div class="child-node"><strong>Strategic Focus</strong>Positioning statement</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRACTICE AREAS -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node practice">
+            <span class="label">Practice Areas</span>
+            <span class="tag">Services Overview</span>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Commercial &amp; Corporate</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Company Formation</div>
+                  <div class="sub-child">Joint Ventures</div>
+                  <div class="sub-child">Governance Agreements</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>Dispute Resolution</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Litigation</div>
+                  <div class="sub-child">Arbitration &amp; ADR</div>
+                  <div class="sub-child">Regulatory Rep.</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>Regulatory &amp; Compliance</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Licensing &amp; Permits</div>
+                  <div class="sub-child">Administrative Law</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>International Trade</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Import/Export</div>
+                  <div class="sub-child">Cross-Border Deals</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>Tax &amp; Finance</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Corporate Tax</div>
+                  <div class="sub-child">Investment Structuring</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>Policy &amp; Govt. Advisory</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Policy Drafting</div>
+                  <div class="sub-child">Govt. Interface</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MARITIME -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node maritime">
+            <span class="label">Maritime Division</span>
+            <span class="tag">Flagship Division</span>
+            <div class="badge">Specialist</div>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Division Overview</strong>Mission &amp; positioning</div>
+              <div class="child-node"><strong>Core Services</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Vessel Arrest &amp; Release</div>
+                  <div class="sub-child">Shipping Litigation</div>
+                  <div class="sub-child">Casualty Response</div>
+                  <div class="sub-child">Crew Claims &amp; Repatriation</div>
+                  <div class="sub-child">P&amp;I Support</div>
+                  <div class="sub-child">Port State Compliance</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>Division Advantage</strong>Ms. Diaba / IMLI / IMO</div>
+              <div class="child-node"><strong>Geographic Reach</strong>Tema · Takoradi · High Court</div>
+              <div class="child-node"><strong>Engagement Model</strong>Matter-based / Advisory</div>
+              <div class="child-node"><strong>Maritime CTA</strong>Emergency contact form</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERNATIONAL -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node intl">
+            <span class="label">International</span>
+            <span class="tag">Cross-Border Practice</span>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Cross-Border Services</strong>Foreign firm cooperation</div>
+              <div class="child-node"><strong>Cooperation Framework</strong>Reporting · Cost-sharing</div>
+              <div class="child-node"><strong>Industries Served</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Shipping &amp; Logistics</div>
+                  <div class="sub-child">Maritime Insurance</div>
+                  <div class="sub-child">Energy &amp; Offshore</div>
+                  <div class="sub-child">Trade &amp; Infrastructure</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INSIGHTS -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node insights">
+            <span class="label">Insights</span>
+            <span class="tag">Thought Leadership</span>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Legal &amp; Reg. Updates</strong>Industry news</div>
+              <div class="child-node"><strong>Maritime Commentary</strong>Sector analysis</div>
+              <div class="child-node"><strong>Articles &amp; Publications</strong>Written pieces</div>
+              <div class="child-node"><strong>Events &amp; Presentations</strong>Highlights</div>
+              <div class="child-node"><strong>Newsletter Signup</strong>Optional CTA</div>
+              <div class="child-node" style="opacity:0.5;font-size:8px;">
+                Article Page →<br>
+                Title · Date · Summary<br>
+                Full Content · Related
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="nav-col">
+          <div class="nav-tick"></div>
+          <div class="page-node contact">
+            <span class="label">Contact</span>
+            <span class="tag">Get in Touch</span>
+          </div>
+          <div class="children-area">
+            <div class="section-group">
+              <div class="child-node"><strong>Office Details</strong>Address · Phone · WhatsApp · Email</div>
+              <div class="child-node"><strong>Contact Form</strong>
+                <div class="sub-children">
+                  <div class="sub-child">Name &amp; Organisation</div>
+                  <div class="sub-child">Email &amp; Phone</div>
+                  <div class="sub-child">Area of Inquiry</div>
+                  <div class="sub-child">Message</div>
+                </div>
+              </div>
+              <div class="child-node"><strong>Map / Directions</strong>Optional embed</div>
+              <div class="child-node"><strong>Emergency Maritime</strong>Direct contact line</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end nav-row -->
+    </div><!-- end nav wrapper -->
+
+  </div><!-- end flow -->
+
+  <footer>
+    <div>Flowchart prepared for <span>Diaba, Diaba &amp; Co</span> — Website Architecture &amp; Navigation Structure</div>
+    <div style="margin-top:8px; opacity:0.5;">7 primary pages · 40+ sub-sections · Specialty Maritime Division highlighted</div>
+  </footer>
+
+</div>
+</body>
+</html>
